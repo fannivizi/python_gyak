@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ show.name }} – Részletek</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+            <h1>WatchList</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="details">
+            <img src="{{ show.image.original }}" alt="{{ show.name }}" class="poster">
+
+            <h1>{{ show.name }}</h1>
+
+            {% if show.genres %}
+                <div class="genres">
+                    {% for genre in show.genres %}
+                        <span class="genre">{{ genre }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <p><strong>Premier:</strong> {{ show.premiered or "Ismeretlen" }}</p>
+            <p><strong>Értékelés:</strong> {{ show.rating.average or "Nincs értékelés" }}/10</p>
+
+            <div>
+                {{ show.summary | safe }}
+            </div>
+        </div>
+
+        <div class="seasons">
+            <label for="seasons">Válassz évadot:</label>
+            <select id="seasons">
+                <option value="">-- Válassz egy évadot --</option>
+                {% for season in seasons %}
+                    <option value="{{ season }}">{{ season }}.évad</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="episodes">
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('seasons').addEventListener('change', function() {
+            const season = this.value;
+            const episodesDiv = document.getElementById('episodes');
+            const seasons = {{ seasons | tojson }}
+
+            if (season) {
+                episodesDiv.innerHTML = ""
+                for (const episode of seasons[season]) {
+                    const episodeDiv = document.createElement('div');
+                    episodeDiv.classList.add('episode');
+                    episodeDiv.innerHTML = `${episode.number}.rész - ${episode.name}`;
+                    episodesDiv.appendChild(episodeDiv);
+                }
+            }
+
+        });
+    </script>
+
+</body>
+</html>

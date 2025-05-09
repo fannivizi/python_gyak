@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorozatok</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+            <h1>WatchList</h1>
+        </div>
+    </header>
+
+    <main>
+        <h2>Legnépszerűbb sorozatok</h2>
+        <div class="grid_shows">
+            {% for show in shows %}
+                <div class="item" onclick="window.location.href='/show/{{ show.id }}'">
+                    <img src="{{ show.image.medium }}" alt="{{ show.name }}">
+                    <h3>{{ show.name }}</h3>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Made with ❤️ for TV and movie enthusiasts.</p>
+        </div>
+    </footer>
+</body>
+</html>
