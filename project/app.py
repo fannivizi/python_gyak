@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Watched
 
@@ -51,6 +51,9 @@ def show(show_id):
 
 @app.route('/reg')
 def reg():
+    if 'username' in session:
+        return redirect(url_for('index'))
+
     error = ""
 
     if request.method == 'POST':
@@ -76,6 +79,9 @@ def reg():
 
 @app.route('/login', methods=['POST'])
 def login():
+    if 'username' in session:
+        return redirect(url_for('index'))
+
     username = request.form['username']
     password = request.form['password']
 
@@ -84,10 +90,40 @@ def login():
     if user and check_password_hash(user.password, password):
         session['username'] = user.username
         flash("Sikeres bejelentkezés")
-        return redirect("/")
+        return redirect(url_for('index'))
 
     flash("Hibás felhasználónév vagy jelszó")
-    return redirect("/")
+    return redirect(url_for('index'))
+
+@app.route('/logout')
+def logout():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
+@app.route('/profile')
+def profile():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+
+    user = User.query.filter_by(username=session['username']).first()
+
+    return render_template('profile.html', user=user)
+
+@app.route('/add_watched/<id>')
+def add_watched(id):
+    if 'username' not in session:
+        return redirect(url_for('index'))
+
+    username=session['username']
+
+    watched=Watched(id=id, username=username)
+    db.session.add(watched)
+    db.session.commit()
+
+    return redirect(request.referrer or url_for('index'))
 
 if __name__ == '__main__':
     app.run()

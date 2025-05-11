@@ -7,8 +7,14 @@
 </head>
 <body>
     <header>
-        <div class="title">
-            <h1>WatchList</h1>
+        <h1>WatchList</h1>
+        <div class="buttons">
+            <button onclick="window.location.href='/'">Főoldal</button>
+            <button onclick="window.location.href='/shows'">Sorozatok</button>
+            {% if 'username' in session %}
+                <button onclick="window.location.href='/profile'">Profilom</button>
+            	<button onclick="window.location.href='/logout'">Kijelentkezés</button>
+            {% endif %}
         </div>
     </header>
 
@@ -59,7 +65,10 @@
                 for (const episode of seasons[season]) {
                     const episodeDiv = document.createElement('div');
                     episodeDiv.classList.add('episode');
-                    episodeDiv.innerHTML = `${episode.number}.rész - ${episode.name}`;
+                    episodeDiv.innerHTML = `
+                            ${episode.number}.rész - ${episode.name}
+                            <button class="mark_watched" onclick="window.location.href='/add_watched/${episode.id}'">Láttam</button>
+                        `;
                     episodesDiv.appendChild(episodeDiv);
                 }
             }

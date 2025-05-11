@@ -10,14 +10,27 @@ body {
     color: #333;
 }
 
-.title {
-    margin: 0 30px;
-}
-
 header {
     background-color: #2A4759;
     color: white;
-    padding: 30px 0;
+    padding: 30px;
+}
+
+header h1 {
+    font-size: 35px;
+    margin: 0 30px 0 0;
+    display: inline-block;
+}
+
+.buttons {
+    display: inline-block;
+    float: right;
+}
+
+header button {
+    font-size: 15px;
+    padding: 7px;
+    margin: 5px;
 }
 
 .login {
@@ -62,7 +75,6 @@ header {
     background: #d77a52;
 }
 
-
 main {
     text-align: center;
     background: white;
@@ -74,8 +86,8 @@ main {
 }
 
 h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
+    font-size: 35px;
+    margin-bottom: 30px;
     color: #2A4759;
 }
 
@@ -115,7 +127,7 @@ p {
 
 .item h3 {
     padding: 10px 15px;
-    font-size: 1.1rem;
+    font-size: 15px;
     font-weight: bold;
     color: #333;
 }
@@ -131,14 +143,13 @@ button {
     border: none;
     padding: 12px 25px;
     border-radius: 30px;
-    font-size: 1rem;
-    cursor: pointer;
+    font-size: 15px;
     transition: background-color 0.3s;
     margin-top: 15px;
 }
 
 button:hover {
-    background-color: #F79B72;
+    background-color: #d77a52;
 }
 
 .show-link {
@@ -176,7 +187,7 @@ button:hover {
 }
 
 #seasons {
-    font-size: 1rem;
+    font-size: 15px;
     padding: 10px;
     margin-top: 10px;
     width: 200px;
@@ -214,5 +225,5 @@ footer {
 }
 
 footer p {
-    font-size: 1rem;
+    font-size: 15px;
 }

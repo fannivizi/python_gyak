@@ -7,29 +7,35 @@
 </head>
 <body>
     <header>
-        <div class="title">
-            <h1>WatchList</h1>
+        <h1>WatchList</h1>
+        <div class="buttons">
+            {% if 'username' in session %}
+                <button onclick="window.location.href='/profile'">Profilom</button>
+                <button onclick="window.location.href='/logout'">Kijelentkezés</button>
+            {% endif %}
         </div>
     </header>
 
-    <div class="login">
-        <h2>Bejelentkezés</h2>
-        <form method="post" action="/login">
-            <label for="username">Felhasználónév</label>
-            <input type="text" name="username" id="username" required>
-            <label for="password">Jelszó</label>
-            <input type="password" name="password" id="password" required>
-            <input type="submit" name="login" value="Bejelentkezés">
+    {% if 'username' not in session %}
+        <div class="login">
+            <h2>Bejelentkezés</h2>
+            <form method="post" action="/login">
+                <label for="username">Felhasználónév</label>
+                <input type="text" name="username" id="username" required>
+                <label for="password">Jelszó</label>
+                <input type="password" name="password" id="password" required>
+                <input type="submit" name="login" value="Bejelentkezés">
 
-            {% with messages = get_flashed_messages()%}
-                {% if messages%}
-                    <p>{{messages[0]}}</p>
-                {%endif%}
-            {%endwith%}
+                {% with messages = get_flashed_messages()%}
+                    {% if messages%}
+                        <p>{{messages[0]}}</p>
+                    {%endif%}
+                {%endwith%}
 
-            <a href="/reg">Még nincs fiókod? Regisztációhoz nyomj ide!</a>
-        </form>
-    </div>
+                <a href="/reg">Még nincs fiókod? Regisztációhoz nyomj ide!</a>
+            </form>
+        </div>
+    {% endif %}
 
     <main class="content">
         <h2>Legnépszerűbb sorozatok</h2>
