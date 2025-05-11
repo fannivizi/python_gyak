@@ -18,7 +18,7 @@ def best_rated(tv_shows):
     return tv_shows
 
 @app.route('/')
-def landing():
+def index():
     response = requests.get("https://api.tvmaze.com/shows")
     if response.status_code == 200:
         tv_shows = best_rated(response.json())[:10]
@@ -49,7 +49,7 @@ def show(show_id):
 
     return render_template("show.html", show=tv_show, seasons=seasons)
 
-@app.route('/reg')
+@app.route('/reg', methods=['GET', 'POST'])
 def reg():
     if 'username' in session:
         return redirect(url_for('index'))
@@ -109,8 +109,27 @@ def profile():
         return redirect(url_for('index'))
 
     user = User.query.filter_by(username=session['username']).first()
+    watched = Watched.query.filter_by(username=session['username']).all()
 
-    return render_template('profile.html', user=user)
+    episodes = []
+    for episode in watched:
+        episodes.append(requests.get(f"https://api.tvmaze.com/episodes/{episode.id}?embed=show").json())
+
+    shows = []
+    total = 0
+    for episode in episodes:
+        total += episode['runtime']
+        show_id = episode['_embedded']['show']['id']
+        if show_id not in shows:
+            shows.append(show_id)
+
+    stats = {
+        'episodes': len(episodes),
+        'shows': len(shows),
+        'time': round(total / 60, 1)
+    }
+
+    return render_template('profile.html', user=user, episodes=episodes, stats=stats)
 
 @app.route('/add_watched/<id>')
 def add_watched(id):

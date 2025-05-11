@@ -216,6 +216,10 @@ button:hover {
     transform: translateY(-3px);
 }
 
+.ep_poster {
+    width: 20%;
+}
+
 
 footer {
     background-color: #2A4759;

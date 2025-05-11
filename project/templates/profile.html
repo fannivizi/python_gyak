@@ -24,10 +24,23 @@
             <p><strong>Email:</strong>{{ user.email }}</p>
         </div>
         <div class="stats">
-
+            <h2>Statisztikák</h2>
+            <ul>
+                <li><strong>Megnézett sorozatok száma:</strong> {{ stats.shows }}</li>
+                <li><strong>Megnézett epizódok száma:</strong> {{ stats.episodes }}</li>
+                <li><strong>Sorozatnézéssel töltött idő:</strong> {{ stats.time }} óra</li>
+            </ul>
         </div>
         <div class="watched">
-
+            <h2>Megnézett részek:</h2>
+            <div class="grid">
+                {% for episode in episodes %}
+                    <div class="item" onclick="window.location.href='/show/{{ episode._embedded.show.id }}'">
+                        <img src="{{ episode.image.medium }}" alt="{{ episode.name }}">
+                        <h3>{{ episode.name }}</h3>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </main>
 </body>

@@ -49,26 +49,32 @@
                 {% endfor %}
             </select>
         </div>
-        <div id="episodes">
+        <div class="grid">
 
         </div>
     </main>
 
+
+
     <script>
         document.getElementById('seasons').addEventListener('change', function() {
             const season = this.value;
-            const episodesDiv = document.getElementById('episodes');
+            const episodesDiv = document.getElementsByClassName('grid')[0];
             const seasons = {{ seasons | tojson }}
 
             if (season) {
                 episodesDiv.innerHTML = ""
                 for (const episode of seasons[season]) {
                     const episodeDiv = document.createElement('div');
-                    episodeDiv.classList.add('episode');
+                    episodeDiv.classList.add('item');
+
                     episodeDiv.innerHTML = `
-                            ${episode.number}.rész - ${episode.name}
-                            <button class="mark_watched" onclick="window.location.href='/add_watched/${episode.id}'">Láttam</button>
-                        `;
+                        <img src="${episode.image.medium}" alt="${episode.name}" class="ep_poster">
+                        <h3>${episode.name}</h3>
+                        <p>${episode.season}. évad, ${episode.number}. rész</p>
+                        <button class="mark_watched" onclick="window.location.href='/add_watched/${episode.id}'">Láttam</button>
+                    `;
+
                     episodesDiv.appendChild(episodeDiv);
                 }
             }
