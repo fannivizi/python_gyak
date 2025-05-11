@@ -137,6 +137,25 @@ p {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
+.item .watched_before {
+    display: none;
+}
+
+.watched_item {
+    background: #788daa;
+    color: white;
+}
+
+.watched_item .mark_watched {
+    display: none;
+}
+
+.watched_item .watched_before {
+    display: block;
+    margin: 15px auto;
+    text-align: center;
+}
+
 button {
     background-color: #F79B72;
     color: white;
@@ -220,6 +239,17 @@ button:hover {
     width: 20%;
 }
 
+.ep_num {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 13px;
+}
+
+.mark_watched {
+    padding: 5px;
+    font-size: 13px;
+    margin: 10px;
+}
 
 footer {
     background-color: #2A4759;

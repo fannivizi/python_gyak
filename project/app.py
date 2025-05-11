@@ -37,6 +37,11 @@ def shows():
 
 @app.route('/show/<show_id>')
 def show(show_id):
+    if 'username' in session:
+        watched = [w.id for w in Watched.query.filter_by(username=session['username']).all()]
+    else:
+        watched = []
+
     tv_show = requests.get(f"https://api.tvmaze.com/shows/{show_id}").json()
 
     episodes = requests.get(f"https://api.tvmaze.com/shows/{show_id}/episodes").json()
@@ -47,7 +52,7 @@ def show(show_id):
         else:
             seasons[episode['season']] = [episode]
 
-    return render_template("show.html", show=tv_show, seasons=seasons)
+    return render_template("show.html", show=tv_show, seasons=seasons, watched=watched)
 
 @app.route('/reg', methods=['GET', 'POST'])
 def reg():
