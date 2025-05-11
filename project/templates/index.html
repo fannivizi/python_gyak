@@ -17,11 +17,17 @@
         <form method="post" action="/login">
             <label for="username">Felhasználónév</label>
             <input type="text" name="username" id="username" required>
-
             <label for="password">Jelszó</label>
             <input type="password" name="password" id="password" required>
+            <input type="submit" name="login" value="Bejelentkezés">
 
-            <button type="submit">Belépés</button>
+            {% with messages = get_flashed_messages()%}
+                {% if messages%}
+                    <p>{{messages[0]}}</p>
+                {%endif%}
+            {%endwith%}
+
+            <a href="/reg">Még nincs fiókod? Regisztációhoz nyomj ide!</a>
         </form>
     </div>
 

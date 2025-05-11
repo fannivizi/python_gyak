@@ -48,7 +48,7 @@ header {
     border-radius: 5px;
 }
 
-.login button {
+.login input[type='submit'] {
     width: 100%;
     margin-top: 15px;
     padding: 10px;
@@ -58,7 +58,7 @@ header {
     border-radius: 5px;
 }
 
-.login button:hover {
+.login input[type='submit']:hover {
     background: #d77a52;
 }
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Regisztráció</title>
+</head>
+<body>
+    <main>
+        <div class="login">
+            <h2>Regisztráció</h2>
+            <form action="/reg" method="post">
+                <label for="username"> Felhasználónév:
+                    <input type="text" name="username" required>
+                </label>
+                <label for="email"> Email cím:
+                    <input type="email" name="email" required>
+                </label>
+                <label for="password"> Jelszó:
+                    <input type="password" name="password" required>
+                </label>
+                <input type="submit" name="reg" value="Regisztráció">
+            </form>
+            {% if error != "" %}
+                <p>{{ error }}</p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>
