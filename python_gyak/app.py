@@ -1,5 +1,5 @@
 from flask import render_template, request, flash, redirect, session, url_for
-from project.models import Watched, API, UserManager, WatchedManager
+from models import Watched, API, UserManager, WatchedManager
 from __init__ import create_app
 
 app = create_app()
