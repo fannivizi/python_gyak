@@ -1,20 +1,12 @@
-import os
-import requests
-from flask import Flask, render_template, request, flash, redirect, session, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User, Watched, API, UserManager, WatchedManager
+from flask import render_template, request, flash, redirect, session, url_for
+from project.models import Watched, API, UserManager, WatchedManager
+from __init__ import create_app
+
+app = create_app()
 
 api = API()
 user = UserManager()
 watched = WatchedManager()
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '\x92\x8e(\x145\x8b\xcdti\xed\xd4y'
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'data', 'users.db')}"
-db.init_app(app)
-with app.app_context():
-    db.create_all()
 
 def best_rated(tv_shows):
     tv_shows.sort(key=lambda show: show['weight'], reverse=True)
@@ -33,14 +25,14 @@ def shows():
 @app.route('/show/<show_id>')
 def show(show_id):
     if 'username' in session:
-        watched = [w.id for w in Watched.query.filter_by(username=session['username']).all()]
+        watched_ids = [w.id for w in Watched.query.filter_by(username=session['username']).all()]
     else:
-        watched = []
+        watched_ids = []
 
     tv_show = api.get_show(show_id)
     seasons = api.get_episodes(show_id)
 
-    return render_template("show.html", show=tv_show, seasons=seasons, watched=watched)
+    return render_template("show.html", show=tv_show, seasons=seasons, watched=watched_ids)
 
 @app.route('/reg', methods=['GET', 'POST'])
 def reg():

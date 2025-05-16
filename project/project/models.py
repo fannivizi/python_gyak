@@ -104,7 +104,8 @@ class UserManager:
 class WatchedManager:
     api = API()
 
-    def add(self, show_id, username):
+    @staticmethod
+    def add(show_id, username):
         watched = Watched(id=show_id, username=username)
         db.session.add(watched)
         db.session.commit()
