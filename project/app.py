@@ -2,8 +2,11 @@ import os
 import requests
 from flask import Flask, render_template, request, flash, redirect, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User, Watched
+from models import db, User, Watched, API, UserManager, WatchedManager
 
+api = API()
+user = UserManager()
+watched = WatchedManager()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '\x92\x8e(\x145\x8b\xcdti\xed\xd4y'
 
@@ -19,20 +22,12 @@ def best_rated(tv_shows):
 
 @app.route('/')
 def index():
-    response = requests.get("https://api.tvmaze.com/shows")
-    if response.status_code == 200:
-        tv_shows = best_rated(response.json())[:10]
-    else:
-        tv_shows = []
+    tv_shows = api.get_all(10)
     return render_template("index.html", shows=tv_shows)
 
 @app.route('/shows')
 def shows():
-    response = requests.get("https://api.tvmaze.com/shows")
-    if response.status_code == 200:
-        tv_shows = best_rated(response.json())
-    else:
-        tv_shows = []
+    tv_shows = api.get_all()
     return render_template("shows.html", shows=tv_shows)
 
 @app.route('/show/<show_id>')
@@ -42,15 +37,8 @@ def show(show_id):
     else:
         watched = []
 
-    tv_show = requests.get(f"https://api.tvmaze.com/shows/{show_id}").json()
-
-    episodes = requests.get(f"https://api.tvmaze.com/shows/{show_id}/episodes").json()
-    seasons = {}
-    for episode in episodes:
-        if episode['season'] in seasons:
-            seasons[episode['season']].append(episode)
-        else:
-            seasons[episode['season']] = [episode]
+    tv_show = api.get_show(show_id)
+    seasons = api.get_episodes(show_id)
 
     return render_template("show.html", show=tv_show, seasons=seasons, watched=watched)
 
@@ -60,23 +48,10 @@ def reg():
         return redirect(url_for('index'))
 
     error = ""
-
     if request.method == 'POST':
-        username=request.form['username']
-        email=request.form['email']
-        password=request.form['password']
-
-        if username.strip() == "" or email.strip() == "" or password.strip() == "":
-            error = "Adj meg minden adatot!"
-        elif User.query.filter_by(username=username).first():
-            error = "A felhasználónév foglalt."
-        elif User.query.filter_by(email=email).first():
-            error = "Az email cím már foglalt."
+        error = user.register(request.form['username'], request.form['email'], request.form['password'])
 
         if error == "":
-            pw = generate_password_hash(password)
-            db.session.add(User(username=username, email=email, password=pw))
-            db.session.commit()
             flash("Sikeres regisztráció")
             return redirect("/")
 
@@ -87,17 +62,9 @@ def login():
     if 'username' in session:
         return redirect(url_for('index'))
 
-    username = request.form['username']
-    password = request.form['password']
+    message = user.login(request.form['username'], request.form['password'])
 
-    user = User.query.filter_by(username=username).first()
-
-    if user and check_password_hash(user.password, password):
-        session['username'] = user.username
-        flash("Sikeres bejelentkezés")
-        return redirect(url_for('index'))
-
-    flash("Hibás felhasználónév vagy jelszó")
+    flash(message)
     return redirect(url_for('index'))
 
 @app.route('/logout')
@@ -105,7 +72,7 @@ def logout():
     if 'username' not in session:
         return redirect(url_for('index'))
 
-    session.pop('username', None)
+    user.logout()
     return redirect(url_for('index'))
 
 @app.route('/profile')
@@ -113,39 +80,17 @@ def profile():
     if 'username' not in session:
         return redirect(url_for('index'))
 
-    user = User.query.filter_by(username=session['username']).first()
-    watched = Watched.query.filter_by(username=session['username']).all()
+    episodes = watched.get_all(session['username'])
+    stats = watched.stats(session['username'])
 
-    episodes = []
-    for episode in watched:
-        episodes.append(requests.get(f"https://api.tvmaze.com/episodes/{episode.id}?embed=show").json())
+    return render_template('profile.html', user=user.get_user(), episodes=episodes, stats=stats)
 
-    shows = []
-    total = 0
-    for episode in episodes:
-        total += episode['runtime']
-        show_id = episode['_embedded']['show']['id']
-        if show_id not in shows:
-            shows.append(show_id)
-
-    stats = {
-        'episodes': len(episodes),
-        'shows': len(shows),
-        'time': round(total / 60, 1)
-    }
-
-    return render_template('profile.html', user=user, episodes=episodes, stats=stats)
-
-@app.route('/add_watched/<id>')
-def add_watched(id):
+@app.route('/add_watched/<show_id>')
+def add_watched(show_id):
     if 'username' not in session:
         return redirect(url_for('index'))
 
-    username=session['username']
-
-    watched=Watched(id=id, username=username)
-    db.session.add(watched)
-    db.session.commit()
+    watched.add(show_id, session['username'])
 
     return redirect(request.referrer or url_for('index'))
 
