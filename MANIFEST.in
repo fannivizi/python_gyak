@@ -1,0 +1,3 @@
+recursive-include python_gyak/templates *
+recursive-include python_gyak/static *
+recursive-include python_gyak/data *

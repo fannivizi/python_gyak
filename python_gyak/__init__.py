@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from models import db
+from python_gyak.models import db
 
 def create_app():
     app = Flask(__name__)
