@@ -24,7 +24,8 @@ class Watched(db.Model):
     )
 
 class API:
-    url = "https://api.tvmaze.com"
+    def __init__(self):
+        self.url = "https://api.tvmaze.com"
 
     def get_all(self, top = 0):
         response = requests.get(f"{self.url}/shows")
@@ -66,8 +67,9 @@ class API:
         return response.json()
 
 class UserManager:
-    username = None
-    email = None
+    def __init__(self):
+        self.username = None
+        self.email = None
 
     @staticmethod
     def register(username, email, password):
@@ -102,7 +104,8 @@ class UserManager:
         return {"username": self.username, "email": self.email}
 
 class WatchedManager:
-    api = API()
+    def __init__(self):
+        self.api = API()
 
     @staticmethod
     def add(show_id, username):
@@ -111,7 +114,7 @@ class WatchedManager:
         db.session.commit()
 
     def get_all(self, username):
-        watched = Watched.query.filter_by(username=session['username']).all()
+        watched = Watched.query.filter_by(username=username).all()
 
         episodes = []
         for episode in watched:
