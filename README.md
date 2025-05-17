@@ -22,6 +22,11 @@ Az alkalazás Flask alapú, a TVMaze API-t használ a sorozatok adatainak lekér
 
 ### Projekt felépítése
 
+- python_gyak
+  - data: adatbázis
+  - static: css
+  - templates: html fájlok
+- tests: Unittestek és a kódelemző eszközök eredménye
 
 ### Kódelemző eszközök:
 
