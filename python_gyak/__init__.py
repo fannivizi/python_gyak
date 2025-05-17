@@ -1,8 +1,12 @@
+"""alkalmazás indítása"""
+
 import os
 from flask import Flask
 from python_gyak.models import db
 
+
 def create_app():
+    """az alkalmazás és az adatbázis előkészítése"""
     app = Flask(__name__)
     app.config['SECRET_KEY'] = '\x92\x8e(\x145\x8b\xcdti\xed\xd4y'
 

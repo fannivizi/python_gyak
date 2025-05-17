@@ -251,6 +251,14 @@ button:hover {
     margin: 10px;
 }
 
+ul {
+    list-style-type: none;
+}
+
+.stats {
+    margin: 50px auto;
+}
+
 footer {
     background-color: #2A4759;
     color: white;
