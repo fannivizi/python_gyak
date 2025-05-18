@@ -32,3 +32,7 @@ Az alkalazás Flask alapú, a TVMaze API-t használ a sorozatok adatainak lekér
 
 - Pylint
 - Flake8
+
+### Bemutató videó:
+
+- python_project.mkv (túl nagy volt, hogy feltöltsem coospace-re)
